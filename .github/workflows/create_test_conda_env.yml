@@ -16,14 +16,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '>=3.9'
-      
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an env var pointing to root of miniconda dir
-          echo $CONDA/bin >> $GITHUB_PATH
-      
       - name: Create fre-cli environment
         run: |
+          echo $CONDA/bin >> $GITHUB_PATH
           # create environment containing all dependencies
           # the env cannot be explicitly activated in github CI/CD
           conda env create -f environment.yml --name fre-cli
