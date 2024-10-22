@@ -5,8 +5,13 @@ on: [push]
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/noaa-gfdl/fre-nctools-ci-rocky-gnu:14.2.0
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: 'NOAA-GFDL/mkmf'
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -35,6 +40,8 @@ jobs:
         run: |
           # try to make sure the right things are in GITHUB_PATH
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
+          # add mkmf binaries for fre make tests
+          echo $GITHUB_WORKSPACE/mkmf/bin >> $GITHUB_PATH
           
           # are we talking to the right python?
           which python
