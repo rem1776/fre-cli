@@ -9,9 +9,6 @@ jobs:
       image: ghcr.io/noaa-gfdl/fre-nctools-ci-rocky-gnu:14.2.0
     steps:
       - uses: actions/checkout@v4
-        with:
-          repository: 'NOAA-GFDL/mkmf'
-      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -35,6 +32,11 @@ jobs:
           # called w/ full path to conda's python for explicitness
           # called as a module (-m pip) for explicitness
           $CONDA/envs/fre-cli/bin/python -m pip install --prefix $CONDA/envs/fre-cli .      
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'NOAA-GFDL/mkmf'
+          path: 'mkmf'
 
       - name: Run pytest in fre-cli environment
         run: |
