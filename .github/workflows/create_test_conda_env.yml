@@ -6,7 +6,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/noaa-gfdl/fre-nctools-ci-rocky-gnu:14.2.0
+      image: ghcr.io/rem1776/fre-cli:test
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
