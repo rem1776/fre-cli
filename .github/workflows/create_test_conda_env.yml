@@ -9,16 +9,14 @@ jobs:
       image: ghcr.io/rem1776/fre-cli:test3
     steps:
       - uses: actions/checkout@v4
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an env var pointing to root of miniconda dir
-          echo $CONDA/bin >> $GITHUB_PATH
-      
       - name: Create fre-cli environment
         run: |
           # create environment containing all dependencies
           # the env cannot be explicitly activated in github CI/CD
           conda env create -f environment.yml --name fre-cli
+
+          # sets CONDA to wherever it may be on the image
+          source /root/.bashrc
 
           # add conda env's executables to github's PATH equiv.
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
