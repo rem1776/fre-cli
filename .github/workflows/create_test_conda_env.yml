@@ -16,6 +16,7 @@ jobs:
           conda env create -f environment.yml --name fre-cli
 
           # add conda env's executables to github's PATH equiv.
+          conda init
           conda activate fre-cli
           echo $PATH >> $GITHUB_PATH
           
