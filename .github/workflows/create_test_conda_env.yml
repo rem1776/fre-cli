@@ -6,19 +6,9 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/rem1776/fre-cli:test
+      image: ghcr.io/rem1776/fre-cli:test2
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '>=3.9'
-
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an env var pointing to root of miniconda dir
-          echo $CONDA/bin >> $GITHUB_PATH
-
       - name: Create fre-cli environment
         run: |
           # create environment containing all dependencies
@@ -26,12 +16,13 @@ jobs:
           conda env create -f environment.yml --name fre-cli
 
           # add conda env's executables to github's PATH equiv.
-          echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
+          conda activate fre-cli
+          echo $PATH >> $GITHUB_PATH
           
           # use *conda environment's pip* to install fre-cli
           # called w/ full path to conda's python for explicitness
           # called as a module (-m pip) for explicitness
-          $CONDA/envs/fre-cli/bin/python -m pip install --prefix $CONDA/envs/fre-cli .      
+          pip install --prefix $CONDA/envs/fre-cli .      
 
       - uses: actions/checkout@v4
         with:
@@ -40,15 +31,8 @@ jobs:
 
       - name: Run pytest in fre-cli environment
         run: |
-          # try to make sure the right things are in GITHUB_PATH
-          echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
           # add mkmf binaries for fre make tests
-          echo $GITHUB_WORKSPACE/mkmf/bin >> $GITHUB_PATH
-          
-          # are we talking to the right python?
-          which python
-          python --version
-          $CONDA/envs/fre-cli/bin/python --version
+          echo $GITHUB_WORKSPACE/mkmf/bin >> $GITHUB_PATH 
           
           # run pytest
           pytest --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/
@@ -62,12 +46,6 @@ jobs:
         run: |
           # try to make sure the right things are in GITHUB_PATH
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
-
-          # are we talking to the right python?
-          which python
-          python --version
-          $CONDA/envs/fre-cli/bin/python --version
-          
           # run pylint
           pylint -ry --ignored-modules netCDF4 fre/ || echo "pylint returned non-zero exit code. preventing workflow from dying with this echo."
       
