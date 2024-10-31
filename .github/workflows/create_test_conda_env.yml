@@ -9,10 +9,10 @@ jobs:
       image: ghcr.io/rem1776/fre-cli:test3
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
         with:
-          repo: NOAA-GFDL/mkmf
+          repository: NOAA-GFDL/mkmf
           path: mkmf
+      - uses: actions/checkout@v4
       - name: Create fre-cli environment
         run: |
           # create environment containing all dependencies
