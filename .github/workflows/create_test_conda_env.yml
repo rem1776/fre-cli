@@ -25,6 +25,8 @@ jobs:
           # add conda env's executables to github's PATH equiv.
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
           echo $GITHUB_WORKSPACE/mkmf/bin >> $GITHUB_PATH
+          ls $GITHUB_WORKSPACE
+          ls
           
           # use *conda environment's pip* to install fre-cli
           # called w/ full path to conda's python for explicitness
@@ -34,6 +36,7 @@ jobs:
       - name: Run pytest in fre-cli environment
         run: |
           # run pytest
+          echo $PATH
           which mkmf
           pytest --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/
           
