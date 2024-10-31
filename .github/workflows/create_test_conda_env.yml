@@ -36,6 +36,7 @@ jobs:
           source /root/.bashrc
           export CONDA_PATH=$CONDA/env/fre-cli/bin
           export PATH=$(echo "$PATH" | sed -e "s|$CONDA_PATH:||;s|:$CONDA_PATH||;s|$|:$CONDA_PATH|")
+          echo PATH $PATH
 
           # run pytest
           pytest -vv  ## --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/ TODO uncomment this
