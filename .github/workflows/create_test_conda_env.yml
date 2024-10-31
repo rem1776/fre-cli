@@ -10,8 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: NOAA-GFDL/mkmf
-      - uses: actions/checkout@v4
+          submodules: recursive
       - name: Create fre-cli environment
         run: |
           # create environment containing all dependencies
@@ -23,13 +22,12 @@ jobs:
 
           # add conda env's executables to github's PATH equiv.
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
-          echo $GITHUB_WORKSPACE/mkmf/bin >> $GITHUB_PATH
-          find $GITHUB_WORKSPACE -name "mkmf"
-          
+          echo $PWD/mkmf/bin >> $GITHUB_PATH
+
           # use *conda environment's pip* to install fre-cli
           # called w/ full path to conda's python for explicitness
           # called as a module (-m pip) for explicitness
-          $CONDA/envs/fre-cli/bin/python -m pip install --prefix $CONDA/envs/fre-cli .      
+          $CONDA/envs/fre-cli/bin/python -m pip install --prefix $CONDA/envs/fre-cli .
 
       - name: Run pytest in fre-cli environment
         run: |
@@ -37,23 +35,23 @@ jobs:
           echo $PATH
           which mkmf
           pytest --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/
-          
+
           # install genbadge to generate coverage badge based on xml
           pip install genbadge
           genbadge coverage -v -i coverage.xml -o docs/cov_badge.svg
           genbadge tests -v -i pytest_results.xml -o docs/pytest_badge.svg
-        
+
       - name: Run pylint in fre-cli environment
         run: |
           # try to make sure the right things are in GITHUB_PATH
           echo $CONDA/envs/fre-cli/bin >> $GITHUB_PATH
-          
-          # run pylint, ignored modules avoid warnings arising from code internal to those modules 
+
+          # run pylint, ignored modules avoid warnings arising from code internal to those modules
           pylint --max-args 6 -ry --ignored-modules netCDF4,cmor fre/ || echo "pylint returned non-zero exit code. preventing workflow from dying with this echo."
-      
+
       - name: Install Sphinx and Build Documentation
         run: |
-          pip install sphinx renku-sphinx-theme sphinx-rtd-theme          
+          pip install sphinx renku-sphinx-theme sphinx-rtd-theme
           pip install --upgrade sphinx-rtd-theme
           sphinx-apidoc --output-dir docs fre/ --separate
           sphinx-build docs build
