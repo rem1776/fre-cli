@@ -31,9 +31,13 @@ jobs:
 
       - name: Run pytest in fre-cli environment
         run: |
+          # this rearranges our PATH so that conda is in the back
+          # necessary because otherwise it will use conda's netcdf/hdf5 instead of containers during model compilation
+          source /root/.bashrc
+          export CONDA_PATH=$CONDA/env/fre-cli/bin
+          export PATH=$(echo "$PATH" | sed -e "s|$CONDA_PATH:||;s|:$CONDA_PATH||;s|$|:$CONDA_PATH|")
+
           # run pytest
-          echo $PATH
-          which mkmf
           pytest -vv  ## --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/ TODO uncomment this
 
           # install genbadge to generate coverage badge based on xml
