@@ -34,7 +34,7 @@ jobs:
           # run pytest
           echo $PATH
           which mkmf
-          pytest --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/
+          pytest -vv --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/
 
           # install genbadge to generate coverage badge based on xml
           pip install genbadge
