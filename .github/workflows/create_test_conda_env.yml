@@ -31,16 +31,16 @@ jobs:
 
       - name: Run pytest in fre-cli environment
         run: |
-          # add spack installed binaries to front of path so we don't
-          # use conda's netcdf/hdf5 during compilation tests
-          echo PATH $PATH
+          # add spack installed binaries to front of path so that
+          # conda's netcdf/hdf5 installs don't break compilation tests
+          export path_save=$PATH
           export PATH="/opt/views/view/bin:$PATH"
-          echo PATH $PATH
 
           # run pytest
-          pytest -vv  ## --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/ TODO uncomment this
+          pytest --junit-xml=pytest_results.xml --config-file=fre/pytest.ini --cov-config=fre/coveragerc --cov-report=xml --cov=fre fre/ TODO uncomment this
 
-          # install genbadge to generate coverage badge based on xml
+          # restore original path and install genbadge to generate coverage badge based on xml
+          export PATH="$path_save"
           pip install genbadge
           genbadge coverage -v -i coverage.xml -o docs/cov_badge.svg
           genbadge tests -v -i pytest_results.xml -o docs/pytest_badge.svg
