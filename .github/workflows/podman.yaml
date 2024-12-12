@@ -1,0 +1,10 @@
+name: test_podman
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/noaa-gfdl/fre-cli:miniconda24.7.1_gcc14.2.0
+    steps:
+      - name: see if podman works
+        run: podman pull ecpe4s/noaa-intel-prototype:2023.09.25
