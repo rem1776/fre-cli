@@ -7,7 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/noaa-gfdl/fre-cli:miniconda24.7.1_gcc14.2.0
+      options: "--cap-add CAP_SYS_ADMIN"
     steps:
+      - name: test podman
+        run: podman pull alpine
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
